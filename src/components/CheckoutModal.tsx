@@ -43,7 +43,7 @@ export const CheckoutModal: React.FC = () => {
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState('');\n  const [city, setCity] = useState('');
   const [selectedState, setSelectedState] = useState(NIGERIAN_STATES[0].name);
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [notes, setNotes] = useState('');
@@ -138,11 +138,11 @@ export const CheckoutModal: React.FC = () => {
       return;
     }
 
-    if ((activeMode === 'buy_now' || activeMode === 'save_to_buy') && !receiptFile) {\n      addToast({ type: 'warning', title: 'Payment Receipt Required', message: 'Please upload your bank transfer receipt before submitting.' });\n      return;\n    }\n\n    if (deliveryMethod === 'delivery' && !address) {
+    if ((activeMode === 'buy_now' || activeMode === 'save_to_buy') && !receiptFile) {\n      addToast({ type: 'warning', title: 'Payment Receipt Required', message: 'Please upload your bank transfer receipt before submitting.' });\n      return;\n    }\n\n    if (deliveryMethod === 'delivery' && (!address || !city)) {
       addToast({
         type: 'warning',
         title: 'Delivery Address Required',
-        message: 'Please enter your street address for delivery'
+        message: 'Please enter your city/LGA and full street address for delivery'
       });
       return;
     }
@@ -157,7 +157,7 @@ export const CheckoutModal: React.FC = () => {
           email: email || `${phone}@customer.fastbuy.ng`,
           address: deliveryMethod === 'pickup' ? 'Alaba Showroom 26 F Line' : address,
           state: selectedState,
-          city: deliveryMethod === 'pickup' ? 'Ojo / Alaba' : 'Customer City',
+          city: deliveryMethod === 'pickup' ? 'Ojo / Alaba' : city,
           deliveryMethod,
           paymentMethod: 'buy_now',
           items,
@@ -196,7 +196,7 @@ export const CheckoutModal: React.FC = () => {
             installmentAmount,
             nextPaymentDate: nextMonth.toISOString().split('T')[0],
             deliveryMethod,
-            deliveryAddress: deliveryMethod === 'pickup' ? 'Alaba Store Pickup' : address,
+            deliveryAddress: deliveryMethod === 'pickup' ? 'Alaba Store Pickup' : `${city}, ${address}`,
             deliveryState: selectedState
           },
           actualDeposit,
@@ -603,6 +603,17 @@ export const CheckoutModal: React.FC = () => {
                         </select>
                       </div>
 
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1">City / Local Government Area *</label>
+                        <input
+                          type="text"
+                          required={deliveryMethod === 'delivery'}
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          placeholder="e.g. Ikeja, Lagos"
+                          className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
                       <div>
                         <label className="block text-xs font-medium text-slate-300 mb-1">Street Address / Landmark *</label>
                         <input
