@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, ArrowLeft, Pause, Play, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import heroImage from '../assets/images/hero_flagship_electronics_1793977432202.jpg';
 import tvImage from '../assets/images/product_oled_smart_tv_1793977433232.jpg';
@@ -26,16 +26,13 @@ const slides: HeroSlide[] = [
 export const HeroBanner: React.FC = () => {
   const { setSelectedCondition, setSelectedCategory, setCurrentView } = useApp();
   const [activeSlide, setActiveSlide] = useState(0);
-  const [paused, setPaused] = useState(false);
   const slide = slides[activeSlide];
 
   useEffect(() => {
-    if (paused) return;
     const timer = window.setInterval(() => setActiveSlide(current => (current + 1) % slides.length), 4200);
     return () => window.clearInterval(timer);
-  }, [paused]);
+  }, []);
 
-  const goToSlide = (index: number) => setActiveSlide((index + slides.length) % slides.length);
   const shop = () => {
     setSelectedCondition('ALL');
     setSelectedCategory(slide.category);
@@ -75,15 +72,11 @@ export const HeroBanner: React.FC = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2 sm:bottom-5 sm:right-8">
-        <span className="mr-1 text-[9px] font-semibold tabular-nums text-white/75 sm:text-[10px]">0{activeSlide + 1}/0{slides.length}</span>
-        <button onClick={() => goToSlide(activeSlide - 1)} aria-label="Previous slide" className="rounded-full border border-white/25 bg-slate-950/50 p-2 text-white backdrop-blur-sm hover:border-cyan-300"><ArrowLeft className="h-3.5 w-3.5" /></button>
-        <div className="flex items-center gap-1.5">
-          {slides.map((item, index) => <button key={item.category} onClick={() => goToSlide(index)} aria-label={`Show ${item.category} slide`} aria-current={index === activeSlide ? 'true' : undefined} className={`h-1.5 rounded-full transition-all ${index === activeSlide ? 'w-6 bg-cyan-400' : 'w-1.5 bg-white/60 hover:bg-white'}`} />)}
-        </div>
-        <button onClick={() => goToSlide(activeSlide + 1)} aria-label="Next slide" className="rounded-full border border-white/25 bg-slate-950/50 p-2 text-white backdrop-blur-sm hover:border-cyan-300"><ArrowRight className="h-3.5 w-3.5" /></button>
-        <button onClick={() => setPaused(!paused)} aria-label={paused ? 'Play slideshow' : 'Pause slideshow'} className="rounded-full border border-white/25 bg-slate-950/50 p-2 text-white backdrop-blur-sm hover:border-cyan-300">{paused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}</button>
+      <div className="absolute bottom-4 right-5 z-10 flex items-center gap-1.5 sm:bottom-5 sm:right-8" aria-label="Automatic slideshow progress">
+        {slides.map((item, index) => (
+          <span key={item.category} className={`h-1.5 rounded-full transition-all duration-500 ${index === activeSlide ? 'w-7 bg-cyan-400' : 'w-1.5 bg-white/50'}`} />
+        ))}
       </div>
-    </section>
+   </section>
   );
 };
