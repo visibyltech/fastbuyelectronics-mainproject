@@ -24,7 +24,7 @@ const resolveProductImage = (path: string, category: string) => {
 };
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart, toggleWishlist, isInWishlist, setSelectedProduct, setCheckoutPreselectedProduct, setCheckoutDefaultMode, setIsCheckoutOpen } = useApp();
+  const { addToCart, toggleWishlist, isInWishlist, setSelectedProduct, setCheckoutPreselectedProduct, setCheckoutDefaultMode, setIsCheckoutOpen, setIsCartOpen } = useApp();
   const isFavorited = isInWishlist(product.id);
   const discountPercent = product.originalPrice > product.price ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
   const initialDeposit30 = Math.round(product.price * 0.3);
@@ -76,7 +76,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <span className="text-[10px] font-bold tabular-nums text-cyan-300">₦{initialDeposit30.toLocaleString()}</span>
           </div>
           <div className="mt-2 grid grid-cols-2 gap-1.5">
-            <button onClick={(e) => { e.stopPropagation(); addToCart(product); }} className="flex min-w-0 items-center justify-center gap-1 rounded-md border border-slate-700 bg-slate-800 px-1.5 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700 sm:text-xs">
+            <button onClick={(e) => { e.stopPropagation(); addToCart(product); setIsCartOpen(true); }} className="flex min-w-0 items-center justify-center gap-1 rounded-md border border-slate-700 bg-slate-800 px-1.5 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700 sm:text-xs">
               <ShoppingBag className="h-3 w-3 shrink-0 text-cyan-300" /><span>Cart</span>
             </button>
             <button onClick={handleStartSaveToBuy} className="flex min-w-0 items-center justify-center gap-1 rounded-md bg-gradient-to-r from-cyan-600 to-blue-600 px-1.5 py-2 text-[10px] font-bold text-white transition hover:from-cyan-500 hover:to-blue-500 sm:text-xs">
