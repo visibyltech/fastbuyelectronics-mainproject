@@ -37,13 +37,18 @@ export const CheckoutModal: React.FC = () => {
     setCurrentView
   } = useApp();
 
-  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);
+  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);
+
+  useEffect(() => {
+    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);
+  }, [isCheckoutOpen, checkoutDefaultMode]);
 
   // Form Fields
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');\n  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
   const [selectedState, setSelectedState] = useState(NIGERIAN_STATES[0].name);
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const [notes, setNotes] = useState('');
@@ -138,7 +143,12 @@ export const CheckoutModal: React.FC = () => {
       return;
     }
 
-    if ((activeMode === 'buy_now' || activeMode === 'save_to_buy') && !receiptFile) {\n      addToast({ type: 'warning', title: 'Payment Receipt Required', message: 'Please upload your bank transfer receipt before submitting.' });\n      return;\n    }\n\n    if (deliveryMethod === 'delivery' && (!address || !city)) {
+    if ((activeMode === 'buy_now' || activeMode === 'save_to_buy') && !receiptFile) {
+      addToast({ type: 'warning', title: 'Payment Receipt Required', message: 'Please upload your bank transfer receipt before submitting.' });
+      return;
+    }
+
+    if (deliveryMethod === 'delivery' && (!address || !city)) {
       addToast({
         type: 'warning',
         title: 'Delivery Address Required',
