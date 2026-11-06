@@ -11,6 +11,7 @@ import heroImage from '../assets/images/hero_flagship_electronics_1793977432202.
 interface ProductCardProps { product: Product; }
 
 const resolveProductImage = (path: string, category: string) => {
+  if (path && (/^https?:\/\//i.test(path) || path.startsWith('data:') || (path.startsWith('/') && !path.startsWith('/src/')))) return path;
   const value = (path || '').toLowerCase();
   if (value.includes('oled') || value.includes('smart_tv')) return tvImage;
   if (value.includes('refrigerator') || value.includes('fridge')) return fridgeImage;
