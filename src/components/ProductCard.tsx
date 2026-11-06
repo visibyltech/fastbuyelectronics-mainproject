@@ -1,28 +1,32 @@
 import React from 'react';
-import { Heart, ShoppingBag, Eye, PiggyBank, Star, Check } from 'lucide-react';
+import { Heart, ShoppingBag, PiggyBank, Star } from 'lucide-react';
 import { Product } from '../types';
 import { useApp } from '../context/AppContext';
+import tvImage from '../assets/images/product_oled_smart_tv_1793977433232.jpg';
+import fridgeImage from '../assets/images/product_smart_refrigerator_1793977434129.jpg';
+import acImage from '../assets/images/product_inverter_ac_1793977434537.jpg';
+import generatorImage from '../assets/images/product_silent_generator_1793977434099.jpg';
+import heroImage from '../assets/images/hero_flagship_electronics_1793977432202.jpg';
 
-interface ProductCardProps {
-  product: Product;
-}
+interface ProductCardProps { product: Product; }
+
+const resolveProductImage = (path: string, category: string) => {
+  const value = (path || '').toLowerCase();
+  if (value.includes('oled') || value.includes('smart_tv')) return tvImage;
+  if (value.includes('refrigerator') || value.includes('fridge')) return fridgeImage;
+  if (value.includes('inverter_ac') || value.includes('air_condition')) return acImage;
+  if (value.includes('generator')) return generatorImage;
+  if (category.toLowerCase().includes('tv')) return tvImage;
+  if (category.toLowerCase().includes('refrigerator')) return fridgeImage;
+  if (category.toLowerCase().includes('air conditioner')) return acImage;
+  if (category.toLowerCase().includes('generator')) return generatorImage;
+  return heroImage;
+};
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const {
-    addToCart,
-    toggleWishlist,
-    isInWishlist,
-    setSelectedProduct,
-    setCheckoutPreselectedProduct,
-    setCheckoutDefaultMode,
-    setIsCheckoutOpen
-  } = useApp();
-
+  const { addToCart, toggleWishlist, isInWishlist, setSelectedProduct, setCheckoutPreselectedProduct, setCheckoutDefaultMode, setIsCheckoutOpen } = useApp();
   const isFavorited = isInWishlist(product.id);
-  const discountPercent = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100
-  );
-
+  const discountPercent = product.originalPrice > product.price ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
   const initialDeposit30 = Math.round(product.price * 0.3);
 
   const handleStartSaveToBuy = (e: React.MouseEvent) => {
@@ -33,152 +37,54 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div
-      onClick={() => setSelectedProduct(product)}
-      className="group relative bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-950/20 transition-all duration-300 flex flex-col cursor-pointer"
-    >
-      {/* Product Image Area */}
-      <div className="relative aspect-4/3 w-full bg-slate-950 overflow-hidden flex items-center justify-center p-4">
-        <img
-          src={product.images[0]}
-          alt={product.name}
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
-          onError={(e) => {
-            // fallback if needed
-            e.currentTarget.src = '/src/assets/images/hero_flagship_electronics_1793977432202.jpg';
-          }}
-        />
-
-        {/* Condition Tag */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
-          {product.condition === 'BRAND NEW' ? (
-            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-cyan-950/90 text-cyan-300 border border-cyan-700/60 tracking-wider">
-              BRAND NEW
-            </span>
-          ) : (
-            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-950/90 text-amber-300 border border-amber-700/60 tracking-wider">
-              UK USED · {product.ukUsedGrade || 'GRADE A'}
-            </span>
-          )}
-
-          {discountPercent > 0 && (
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-950/90 text-rose-400 border border-rose-800/60">
-              -{discountPercent}%
-            </span>
-          )}
+    <article onClick={() => setSelectedProduct(product)} className="group flex min-w-0 cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/90 transition duration-200 hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-950/20">
+      <div className="relative aspect-square w-full overflow-hidden bg-white/95 p-2 sm:p-3">
+        <img src={resolveProductImage(product.images?.[0] || '', product.category)} alt={product.name} loading="lazy" className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" />
+        <div className="absolute left-2 top-2 flex max-w-[72%] flex-col items-start gap-1">
+          <span className={`rounded px-1.5 py-1 text-[8px] font-extrabold tracking-wide sm:text-[9px] ${product.condition === 'BRAND NEW' ? 'border border-cyan-700/50 bg-cyan-950/95 text-cyan-300' : 'border border-amber-700/50 bg-amber-950/95 text-amber-300'}`}>
+            {product.condition === 'BRAND NEW' ? 'BRAND NEW' : `UK USED · ${product.ukUsedGrade || 'GRADE A'}`}
+          </span>
+          {discountPercent > 0 && <span className="rounded bg-rose-950/95 px-1.5 py-0.5 text-[9px] font-bold text-rose-300">-{discountPercent}%</span>}
         </div>
-
-        {/* Wishlist Heart Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleWishlist(product.id);
-          }}
-          className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition-all ${
-            isFavorited
-              ? 'bg-rose-600/90 text-white'
-              : 'bg-slate-950/70 text-slate-400 hover:text-white hover:bg-slate-900'
-          }`}
-          title={isFavorited ? 'Remove from Wishlist' : 'Add to Wishlist'}
-        >
-          <Heart className={`w-4 h-4 ${isFavorited ? 'fill-current' : ''}`} />
+        <button onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }} aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'} className={`absolute right-2 top-2 rounded-full p-1.5 shadow-sm transition ${isFavorited ? 'bg-rose-600 text-white' : 'bg-slate-950/80 text-slate-500 hover:text-white'}`}>
+          <Heart className={`h-3.5 w-3.5 ${isFavorited ? 'fill-current' : ''}`} />
         </button>
-
-        {/* Quick View Button on Hover */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedProduct(product);
-            }}
-            className="w-full py-2 bg-slate-950/90 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg border border-slate-700 flex items-center justify-center gap-1.5 backdrop-blur-md shadow-lg"
-          >
-            <Eye className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Quick Specs</span>
-          </button>
-        </div>
       </div>
 
-      {/* Product Details Area */}
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-        <div>
-          {/* Brand & Category */}
-          <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
-            <span className="text-cyan-400 font-semibold uppercase">{product.brand}</span>
-            <span aria-hidden="true">·</span>
-            <span>{product.category}</span>
+      <div className="flex flex-1 flex-col justify-between gap-2 p-2.5 sm:p-3">
+        <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-cyan-300 sm:text-[10px]">
+            <span className="truncate">{product.brand}</span><span className="text-slate-600">·</span><span className="truncate font-medium text-slate-400">{product.category}</span>
           </div>
-
-          {/* Product Name */}
-          <h3 className="text-sm font-semibold text-slate-100 mt-1 line-clamp-2 group-hover:text-cyan-300 transition-colors leading-snug">
+          <h3 className="mt-1 line-clamp-2 min-h-[2.35rem] text-[11px] font-semibold leading-snug text-slate-100 group-hover:text-cyan-300 sm:text-xs">
             {product.name}
           </h3>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 mt-2 text-xs text-slate-400 font-mono">
-            <div className="flex items-center text-amber-400">
-              <Star className="w-3.5 h-3.5 fill-current" />
-            </div>
+          <div className="mt-1.5 flex items-center gap-1 text-[10px] text-slate-400">
+            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
             <span className="font-semibold text-slate-200">{product.rating}</span>
-            <span className="text-slate-500">({product.reviewCount} reviews)</span>
+            <span className="truncate">({product.reviewCount} reviews)</span>
           </div>
         </div>
 
-        {/* Price & Save to Buy Indicator */}
-        <div className="pt-2 border-t border-slate-800/80 space-y-2">
-          <div className="flex items-baseline justify-between">
-            <div>
-              <span className="text-lg font-bold font-mono text-white tracking-tight tabular-nums">
-                ₦{product.price.toLocaleString()}
-              </span>
-              {product.originalPrice > product.price && (
-                <span className="text-xs text-slate-500 line-through font-mono ml-2 tabular-nums">
-                  ₦{product.originalPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
-            <span className="text-[11px] text-emerald-400 font-mono">
-              {product.stock > 0 ? 'In Stock (Alaba)' : 'Out of Stock'}
-            </span>
+        <div className="border-t border-slate-800 pt-2">
+          <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+            <span className="text-sm font-extrabold tabular-nums text-white sm:text-base">₦{product.price.toLocaleString()}</span>
+            {product.originalPrice > product.price && <span className="text-[9px] text-slate-500 line-through sm:text-[10px]">₦{product.originalPrice.toLocaleString()}</span>}
           </div>
-
-          {/* Save to Buy Preview Tag */}
-          <div className="bg-sky-950/50 border border-sky-800/40 rounded px-2 py-1 flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 flex items-center gap-1">
-              <PiggyBank className="w-3 h-3 text-cyan-400" />
-              <span>Save To Buy (30%):</span>
-            </span>
-            <span className="text-cyan-300 font-mono font-semibold tabular-nums">
-              ₦{initialDeposit30.toLocaleString()}
-            </span>
+          <div className="mt-1.5 flex items-center justify-between gap-1 rounded-md border border-cyan-900/60 bg-cyan-950/40 px-2 py-1">
+            <span className="flex items-center gap-1 text-[9px] text-slate-400"><PiggyBank className="h-3 w-3 shrink-0 text-cyan-400" /> 30% deposit</span>
+            <span className="text-[10px] font-bold tabular-nums text-cyan-300">₦{initialDeposit30.toLocaleString()}</span>
           </div>
-
-          {/* Buttons: Add to Cart & Save To Buy */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                addToCart(product);
-              }}
-              className="w-full py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-slate-700"
-            >
-              <ShoppingBag className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Add to Cart</span>
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
+            <button onClick={(e) => { e.stopPropagation(); addToCart(product); }} className="flex min-w-0 items-center justify-center gap-1 rounded-md border border-slate-700 bg-slate-800 px-1.5 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700 sm:text-xs">
+              <ShoppingBag className="h-3 w-3 shrink-0 text-cyan-300" /><span>Cart</span>
             </button>
-
-            <button
-              onClick={handleStartSaveToBuy}
-              className="w-full py-2 px-2.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-semibold flex items-center justify-center gap-1 shadow-sm transition-all"
-              title="Deposit 30% and save for this item"
-            >
-              <PiggyBank className="w-3.5 h-3.5" />
-              <span>Save to Buy</span>
+            <button onClick={handleStartSaveToBuy} className="flex min-w-0 items-center justify-center gap-1 rounded-md bg-gradient-to-r from-cyan-600 to-blue-600 px-1.5 py-2 text-[10px] font-bold text-white transition hover:from-cyan-500 hover:to-blue-500 sm:text-xs">
+              <PiggyBank className="h-3 w-3 shrink-0" /><span>Save to Buy</span>
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
