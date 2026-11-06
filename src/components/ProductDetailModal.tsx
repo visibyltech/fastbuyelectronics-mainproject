@@ -45,7 +45,6 @@ export const ProductDetailModal: React.FC = () => {
     setCheckoutPreselectedProduct(selectedProduct);
     setCheckoutDefaultMode(mode);
     setIsCheckoutOpen(true);
-    setSelectedProduct(null);
   };
 
   const handleShare = () => {
