@@ -28,7 +28,7 @@ export const ProductDetailModal: React.FC = () => {
   const {
     selectedProduct, setSelectedProduct, addToCart, toggleWishlist, isInWishlist,
     setCheckoutPreselectedProduct, setCheckoutDefaultMode, setIsCheckoutOpen,
-    products, addToast
+    products, addToast, setIsCartOpen
   } = useApp();
   const [activeTab, setActiveTab] = useState<'overview' | 'specs' | 'reviews'>('overview');
   const [selectedImgIdx, setSelectedImgIdx] = useState(0);
