@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   X,
   Copy,
@@ -37,7 +37,7 @@ export const CheckoutModal: React.FC = () => {
     setCurrentView
   } = useApp();
 
-  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);
+  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);
 
   // Form Fields
   const [customerName, setCustomerName] = useState('');
@@ -138,7 +138,7 @@ export const CheckoutModal: React.FC = () => {
       return;
     }
 
-    if (deliveryMethod === 'delivery' && !address) {
+    if ((activeMode === 'buy_now' || activeMode === 'save_to_buy') && !receiptFile) {\n      addToast({ type: 'warning', title: 'Payment Receipt Required', message: 'Please upload your bank transfer receipt before submitting.' });\n      return;\n    }\n\n    if (deliveryMethod === 'delivery' && !address) {
       addToast({
         type: 'warning',
         title: 'Delivery Address Required',
@@ -166,7 +166,7 @@ export const CheckoutModal: React.FC = () => {
           totalAmount,
           paymentStatus: receiptFile ? 'pending_verification' : 'pending_verification',
           orderStatus: 'placed',
-          receiptFileName: receiptFile ? receiptFile.name : 'manual_transfer_pending.pdf',
+          receiptFileName: receiptFile ? receiptFile.name : '',
           receiptUrl: receiptPreview || '',
           transferReference: transferReference || `TRF-${Math.floor(100000 + Math.random() * 900000)}`,
           notes
@@ -200,7 +200,7 @@ export const CheckoutModal: React.FC = () => {
             deliveryState: selectedState
           },
           actualDeposit,
-          receiptFile ? receiptFile.name : `initial_deposit_${actualDeposit}.pdf`,
+          receiptFile ? receiptFile.name : '',
           receiptPreview || '',
           transferReference || `STB-INIT-${Math.floor(1000 + Math.random() * 9000)}`
         );
@@ -221,7 +221,7 @@ export const CheckoutModal: React.FC = () => {
           employmentType,
           employerName: employerName || 'Self Employed / Trader',
           monthlyIncome,
-          bvnOrNin: bvnOrNin || '22819203910',
+          bvnOrNin: bvnOrNin,
           durationMonths: bnplTenureMonths,
           monthlyInstallment: monthlyBnplInstallment,
           interestRate: Math.round(interestRate * 100)
@@ -243,12 +243,12 @@ export const CheckoutModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
-      <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-slate-950/90 backdrop-blur-md flex items-start sm:items-center justify-center p-0 sm:p-6 animate-fadeIn">
+      <div className="relative w-full max-w-4xl min-w-0 min-h-[100dvh] sm:min-h-0 bg-slate-900 border-0 sm:border sm:border-slate-800 rounded-none sm:rounded-2xl shadow-2xl overflow-hidden my-0 sm:my-4">
         {/* Modal Top Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950">
+        <div className="sticky top-0 z-20 flex items-center justify-between gap-3 px-3 py-3 sm:px-6 sm:py-4 border-b border-slate-800 bg-slate-950">
           <div>
-            <h2 className="text-lg font-bold font-display text-white">
+            <h2 className="text-base sm:text-lg font-bold font-display text-white">
               {confirmedOrder || confirmedPlan || confirmedBNPL ? 'Order Confirmation' : 'Secure FastBuy Checkout'}
             </h2>
             <p className="text-xs text-slate-400">
@@ -438,13 +438,13 @@ export const CheckoutModal: React.FC = () => {
 
         {/* Main Form (When not confirmed) */}
         {!confirmedOrder && !confirmedPlan && !confirmedBNPL && (
-          <form onSubmit={handleSubmitOrder} className="p-6 overflow-y-auto max-h-[82vh] space-y-6">
+          <form onSubmit={handleSubmitOrder} className="p-3 sm:p-6 overflow-y-auto max-h-[calc(100dvh-60px)] sm:max-h-[82vh] space-y-4 sm:space-y-6">
             {/* Purchase Mode Selector Tabs */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-1.5 bg-slate-950 border border-slate-800 rounded-xl">
+            <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-slate-950 border border-slate-800 rounded-xl">
               <button
                 type="button"
                 onClick={() => setActiveMode('buy_now')}
-                className={`py-3 px-3 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${
+                className={`min-w-0 py-2 sm:py-3 px-1 sm:px-2 rounded-lg text-[9px] sm:text-xs font-bold transition-all flex flex-col items-center gap-1 ${
                   activeMode === 'buy_now'
                     ? 'bg-cyan-500 text-slate-950 shadow-md'
                     : 'text-slate-400 hover:text-white'
@@ -452,9 +452,9 @@ export const CheckoutModal: React.FC = () => {
               >
                 <div className="flex items-center gap-1.5">
                   <CreditCard className="w-4 h-4" />
-                  <span>1. BUY NOW, PAY NOW</span>
+                  <span className="text-center leading-tight">BUY NOW<br className="sm:hidden" /> PAY NOW</span>
                 </div>
-                <span className="text-[10px] font-normal opacity-90">Bank Transfer + Proof Upload</span>
+                <span className="hidden sm:block text-[10px] font-normal opacity-90">Bank transfer + receipt</span>
               </button>
 
               <button
@@ -468,9 +468,9 @@ export const CheckoutModal: React.FC = () => {
               >
                 <div className="flex items-center gap-1.5">
                   <PiggyBank className="w-4 h-4" />
-                  <span>2. SAVE TO BUY</span>
+                  <span className="text-center leading-tight">SAVE TO BUY</span>
                 </div>
-                <span className="text-[10px] font-normal opacity-90">30% Deposit + Installments</span>
+                <span className="hidden sm:block text-[10px] font-normal opacity-90">30% deposit + installments</span>
               </button>
 
               <button
@@ -484,9 +484,9 @@ export const CheckoutModal: React.FC = () => {
               >
                 <div className="flex items-center gap-1.5">
                   <FileText className="w-4 h-4" />
-                  <span>3. BUY NOW, PAY LATER</span>
+                  <span className="text-center leading-tight">BUY NOW<br className="sm:hidden" /> PAY LATER</span>
                 </div>
-                <span className="text-[10px] font-normal opacity-90">3-12 Months Repayment</span>
+                <span className="hidden sm:block text-[10px] font-normal opacity-90">3–12 months repayment</span>
               </button>
             </div>
 
