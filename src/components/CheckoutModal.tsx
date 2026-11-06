@@ -261,8 +261,8 @@ export const CheckoutModal: React.FC = () => {
             <h2 className="text-base sm:text-lg font-bold font-display text-white">
               {confirmedOrder || confirmedPlan || confirmedBNPL ? 'Order Confirmation' : 'Secure FastBuy Checkout'}
             </h2>
-            <p className="text-xs text-slate-400">
-              Direct settlement with FASTBUY ELECTRONICS Alaba International Market
+            <p className="text-[10px] sm:text-xs text-slate-400">
+              FASTBUY ELECTRONICS · Secure order payment
             </p>
           </div>
           <button
@@ -449,56 +449,31 @@ export const CheckoutModal: React.FC = () => {
         {/* Main Form (When not confirmed) */}
         {!confirmedOrder && !confirmedPlan && !confirmedBNPL && (
           <form onSubmit={handleSubmitOrder} className="p-3 sm:p-6 overflow-y-auto max-h-[calc(100dvh-60px)] sm:max-h-[82vh] space-y-4 sm:space-y-6">
-            {/* Purchase Mode Selector Tabs */}
-            <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 bg-slate-950 border border-slate-800 rounded-xl">
-              <button
-                type="button"
-                onClick={() => setActiveMode('buy_now')}
-                className={`min-w-0 py-2 sm:py-3 px-1 sm:px-2 rounded-lg text-[9px] sm:text-xs font-bold transition-all flex flex-col items-center gap-1 ${
-                  activeMode === 'buy_now'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-1.5">
-                  <CreditCard className="w-4 h-4" />
-                  <span className="text-center leading-tight">BUY NOW<br className="sm:hidden" /> PAY NOW</span>
-                </div>
-                <span className="hidden sm:block text-[10px] font-normal opacity-90">Bank transfer + receipt</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveMode('save_to_buy')}
-                className={`min-w-0 px-1 py-2.5 sm:px-3 sm:py-3 rounded-lg text-[9px] sm:text-xs font-bold transition-all flex flex-col items-center gap-1 ${
-                  activeMode === 'save_to_buy'
-                    ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-1.5">
-                  <PiggyBank className="w-4 h-4" />
-                  <span className="text-center leading-tight">SAVE TO BUY</span>
-                </div>
-                <span className="hidden sm:block text-[10px] font-normal opacity-90">30% deposit + installments</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveMode('bnpl')}
-                className={`py-3 px-3 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${
-                  activeMode === 'bnpl'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-1.5">
-                  <FileText className="w-4 h-4" />
-                  <span className="text-center leading-tight">BUY NOW<br className="sm:hidden" /> PAY LATER</span>
-                </div>
-                <span className="hidden sm:block text-[10px] font-normal opacity-90">3–12 months repayment</span>
-              </button>
-            </div>
+            {/* Independent payment method cards */}
+            <section className="space-y-2">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-300">Choose how you want to pay</h3>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <button type="button" onClick={() => setActiveMode('buy_now')} aria-pressed={activeMode === 'buy_now'}
+                  className={`min-w-0 min-h-[92px] rounded-xl border p-2 sm:p-3 flex flex-col items-center justify-center gap-2 text-center transition-all ${activeMode === 'buy_now' ? 'border-cyan-400 bg-cyan-950/60 ring-1 ring-cyan-400/40 text-white shadow-lg shadow-cyan-950/30' : 'border-slate-700 bg-slate-950 text-slate-400 hover:border-slate-500'}`}>
+                  <CreditCard className={`h-5 w-5 ${activeMode === 'buy_now' ? 'text-cyan-300' : 'text-slate-400'}`} />
+                  <span className="text-[10px] sm:text-xs font-extrabold leading-tight">Buy Now,<br/>Pay Now</span>
+                  <span className="text-[9px] leading-tight text-slate-400">Full payment</span>
+                </button>
+                <button type="button" onClick={() => setActiveMode('save_to_buy')} aria-pressed={activeMode === 'save_to_buy'}
+                  className={`min-w-0 min-h-[92px] rounded-xl border p-2 sm:p-3 flex flex-col items-center justify-center gap-2 text-center transition-all ${activeMode === 'save_to_buy' ? 'border-cyan-400 bg-cyan-950/60 ring-1 ring-cyan-400/40 text-white shadow-lg shadow-cyan-950/30' : 'border-slate-700 bg-slate-950 text-slate-400 hover:border-slate-500'}`}>
+                  <PiggyBank className={`h-5 w-5 ${activeMode === 'save_to_buy' ? 'text-cyan-300' : 'text-slate-400'}`} />
+                  <span className="text-[10px] sm:text-xs font-extrabold leading-tight">Save to Buy</span>
+                  <span className="text-[9px] leading-tight text-slate-400">30% deposit</span>
+                </button>
+                <button type="button" onClick={() => setActiveMode('bnpl')} aria-pressed={activeMode === 'bnpl'}
+                  className={`min-w-0 min-h-[92px] rounded-xl border p-2 sm:p-3 flex flex-col items-center justify-center gap-2 text-center transition-all ${activeMode === 'bnpl' ? 'border-cyan-400 bg-cyan-950/60 ring-1 ring-cyan-400/40 text-white shadow-lg shadow-cyan-950/30' : 'border-slate-700 bg-slate-950 text-slate-400 hover:border-slate-500'}`}>
+                  <FileText className={`h-5 w-5 ${activeMode === 'bnpl' ? 'text-cyan-300' : 'text-slate-400'}`} />
+                  <span className="text-[10px] sm:text-xs font-extrabold leading-tight">Buy Now,<br/>Pay Later</span>
+                  <span className="text-[9px] leading-tight text-slate-400">Apply for credit</span>
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-400">{activeMode === 'buy_now' ? 'Pay the full amount by bank transfer and upload your receipt.' : activeMode === 'save_to_buy' ? 'Start with at least 30% and complete the balance in installments.' : 'Submit an application for review and choose a repayment period.'}</p>
+            </section>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left Column: Customer details & Delivery (7 cols) */}
