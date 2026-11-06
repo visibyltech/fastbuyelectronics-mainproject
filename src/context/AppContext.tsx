@@ -182,14 +182,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     window.history.replaceState({ fastbuy: true, layer: 'root' }, '', window.location.href);
     window.history.pushState({ fastbuy: true, layer: 'root' }, '', window.location.href);
+  }, []);
+
+  useEffect(() => {
     const handleBack = () => {
       if (isCheckoutOpen) setIsCheckoutOpenState(false);
       else if (selectedProduct) setSelectedProductState(null);
       else if (isCartOpen) setIsCartOpenState(false);
       else if (currentView !== 'store') setCurrentViewState('store');
-      else {
-        window.history.pushState({ fastbuy: true, layer: 'root' }, '', window.location.href);
-      }
+      else window.history.pushState({ fastbuy: true, layer: 'root' }, '', window.location.href);
     };
     window.addEventListener('popstate', handleBack);
     return () => window.removeEventListener('popstate', handleBack);
