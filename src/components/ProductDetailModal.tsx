@@ -13,7 +13,9 @@ import generatorImage from '../assets/images/product_silent_generator_1793977434
 import heroImage from '../assets/images/hero_flagship_electronics_1793977432202.jpg';
 
 const productImage = (product: Product, index = 0) => {
-  const path = (product.images?.[index] || product.images?.[0] || '').toLowerCase();
+  const rawPath = product.images?.[index] || product.images?.[0] || '';
+  if (rawPath && (/^https?:\/\//i.test(rawPath) || rawPath.startsWith('data:') || (rawPath.startsWith('/') && !rawPath.startsWith('/src/')))) return rawPath;
+  const path = rawPath.toLowerCase();
   const category = (product.category || '').toLowerCase();
   if (path.includes('oled') || path.includes('smart_tv') || category.includes('tv')) return tvImage;
   if (path.includes('refrigerator') || path.includes('fridge') || category.includes('refrigerator')) return fridgeImage;
