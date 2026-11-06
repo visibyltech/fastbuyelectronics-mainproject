@@ -134,7 +134,7 @@ export const ProductDetailModal: React.FC = () => {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   disabled={selectedProduct.stock <= 0}
-                  onClick={() => addToCart(selectedProduct)}
+                  onClick={() => { addToCart(selectedProduct); setSelectedProduct(null); setIsCartOpen(true); }}
                   className="flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-bold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <ShoppingBag className="h-4 w-4 shrink-0 text-cyan-300" /><span>Add to Cart</span>
