@@ -37,7 +37,7 @@ export const CheckoutModal: React.FC = () => {
     setCurrentView
   } = useApp();
 
-  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);
+  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);
 
   // Form Fields
   const [customerName, setCustomerName] = useState('');
@@ -460,7 +460,7 @@ export const CheckoutModal: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveMode('save_to_buy')}
-                className={`py-3 px-3 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${
+                className={`min-w-0 px-1 py-2.5 sm:px-3 sm:py-3 rounded-lg text-[9px] sm:text-xs font-bold transition-all flex flex-col items-center gap-1 ${
                   activeMode === 'save_to_buy'
                     ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
                     : 'text-slate-400 hover:text-white'
