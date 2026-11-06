@@ -37,7 +37,7 @@ export const CheckoutModal: React.FC = () => {
     setCurrentView
   } = useApp();
 
-  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);
+  const [activeMode, setActiveMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>(checkoutDefaultMode);\n\n  useEffect(() => {\n    if (isCheckoutOpen) setActiveMode(checkoutDefaultMode);\n  }, [isCheckoutOpen, checkoutDefaultMode]);
 
   // Form Fields
   const [customerName, setCustomerName] = useState('');
