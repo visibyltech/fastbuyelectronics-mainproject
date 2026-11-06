@@ -58,7 +58,7 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Main Top Navigation Bar (Strict 3-Zone Contract) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 sm:h-18 flex items-center justify-between gap-1 sm:gap-6">
         {/* Zone 1: Brand Wordmark & Official Logo */}
         <div
           onClick={() => {
@@ -66,21 +66,21 @@ export const Navbar: React.FC = () => {
             setSelectedCategory('ALL');
             setSelectedCondition('ALL');
           }}
-          className="flex items-center gap-3 cursor-pointer group shrink-0"
+          className="flex min-w-0 items-center gap-2 sm:gap-3 cursor-pointer group shrink"
         >
           <img
             src={STORE_INFO.logoUrl}
             alt="FASTBUY ELECTRONICS Logo"
-            className="w-10 h-10 rounded-full object-cover ring-2 ring-cyan-500/50 group-hover:ring-cyan-400 transition-all shadow-lg shadow-cyan-950/50"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-cyan-500/50 group-hover:ring-cyan-400 transition-all shadow-lg shadow-cyan-950/50 shrink-0"
           />
           <div className="flex flex-col">
-            <span className="font-display font-extrabold text-xl tracking-tight text-white flex items-center gap-1">
+            <span className="font-display font-extrabold text-[13px] min-[390px]:text-[15px] sm:text-xl tracking-tight text-white flex items-center gap-0.5 whitespace-nowrap">
               FASTBUY
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
                 ELECTRONICS
               </span>
             </span>
-            <span className="text-[10px] text-slate-400 tracking-wider font-mono uppercase">
+            <span className="text-[8px] sm:text-[10px] text-slate-400 tracking-wider font-mono uppercase">
               Alaba Int'l Market Lagos
             </span>
           </div>
@@ -169,7 +169,7 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Zone 3: Search, Wishlist, Cart & Admin Action */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-0.5 sm:gap-3 shrink-0">
           {/* Desktop Search Input */}
           <div className="hidden md:flex items-center relative w-56 xl:w-72">
             <input
@@ -196,7 +196,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile search toggle */}
           <button
             onClick={() => setShowSearchMobile(!showSearchMobile)}
-            className="md:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900"
+            className="md:hidden p-1.5 sm:p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900"
             aria-label="Search"
           >
             <Search className="w-5 h-5" />
@@ -209,7 +209,7 @@ export const Navbar: React.FC = () => {
               // Could also scroll or filter by wishlist
             }}
             title="Wishlist"
-            className="relative p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900 transition-colors"
+            className="relative p-1.5 sm:p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900 transition-colors"
           >
             <Heart className="w-5 h-5" />
             {wishlist.length > 0 && (
@@ -222,7 +222,7 @@ export const Navbar: React.FC = () => {
           {/* Cart Trigger */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow-lg shadow-cyan-900/30 transition-all hover:shadow-cyan-700/40"
+            className="relative flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-2 sm:px-3.5 py-2 rounded-lg text-xs font-semibold shadow-lg shadow-cyan-900/30 transition-all hover:shadow-cyan-700/40 shrink-0"
           >
             <ShoppingCart className="w-4 h-4" />
             <span className="hidden sm:inline">Cart</span>
