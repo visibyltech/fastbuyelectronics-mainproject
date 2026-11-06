@@ -157,15 +157,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   // UI state
-  const [currentView, setCurrentView] = useState<'store' | 'save_to_buy_dashboard' | 'order_tracking' | 'bnpl_dashboard' | 'admin'>('store');
+  const [currentView, setCurrentViewState] = useState<'store' | 'save_to_buy_dashboard' | 'order_tracking' | 'bnpl_dashboard' | 'admin'>('store');
+  const [selectedProduct, setSelectedProductState] = useState<Product | null>(null);
+  const [isCartOpen, setIsCartOpenState] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpenState] = useState(false);
+
+  const setCurrentView = (view: 'store' | 'save_to_buy_dashboard' | 'order_tracking' | 'bnpl_dashboard' | 'admin') => {
+    if (view !== currentView) window.history.pushState({ fastbuy: true, layer: 'view', view }, '', window.location.href);
+    setCurrentViewState(view);
+  };
+  const setSelectedProduct = (product: Product | null) => {
+    if (product) window.history.pushState({ fastbuy: true, layer: 'product' }, '', window.location.href);
+    setSelectedProductState(product);
+  };
+  const setIsCartOpen = (open: boolean) => {
+    if (open && !isCartOpen) window.history.pushState({ fastbuy: true, layer: 'cart' }, '', window.location.href);
+    setIsCartOpenState(open);
+  };
+  const setIsCheckoutOpen = (open: boolean) => {
+    if (open && !isCheckoutOpen) window.history.pushState({ fastbuy: true, layer: 'checkout' }, '', window.location.href);
+    setIsCheckoutOpenState(open);
+  };
+
+  useEffect(() => {
+    window.history.replaceState({ fastbuy: true, layer: 'root' }, '', window.location.href);
+    window.history.pushState({ fastbuy: true, layer: 'root' }, '', window.location.href);
+    const handleBack = () => {
+      if (isCheckoutOpen) setIsCheckoutOpenState(false);
+      else if (selectedProduct) setSelectedProductState(null);
+      else if (isCartOpen) setIsCartOpenState(false);
+      else if (currentView !== 'store') setCurrentViewState('store');
+      else {
+        window.history.pushState({ fastbuy: true, layer: 'root' }, '', window.location.href);
+      }
+    };
+    window.addEventListener('popstate', handleBack);
+    return () => window.removeEventListener('popstate', handleBack);
+  }, [isCheckoutOpen, selectedProduct, isCartOpen, currentView]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'ALL'>('ALL');
   const [selectedCondition, setSelectedCondition] = useState<ProductCondition | 'ALL'>('ALL');
   const [sortBy, setSortBy] = useState<'featured' | 'price_low' | 'price_high' | 'rating' | 'newest'>('featured');
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
   const [checkoutPreselectedProduct, setCheckoutPreselectedProduct] = useState<Product | null>(null);
   const [checkoutDefaultMode, setCheckoutDefaultMode] = useState<'buy_now' | 'save_to_buy' | 'bnpl'>('buy_now');
 
