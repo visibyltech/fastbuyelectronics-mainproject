@@ -1,0 +1,6 @@
+{
+  "name": "FASTBUY Electronics | Alaba International Lagos",
+  "description": "Premium electronics store located at Alaba International Market, Lagos. Shop brand new and UK used TVs, air conditioners, refrigerators, generators, washing machines, and laptops with Buy Now, Pay Now, Save To Buy and BNPL.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
